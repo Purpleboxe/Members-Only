@@ -40,12 +40,7 @@ mongoose.set("strictQuery", false);
 
 main().catch((err) => console.log(err));
 async function main() {
-  await mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  });
+  await mongoose.connect(process.env.MONGODB_URI);
 }
 
 mongoose.connection.on("connected", () => {
