@@ -1,25 +1,26 @@
 extends layout 
 
-block content 
-    section 
-        h1 Sign Up
+block content
+    section
+        h1= title
         form(action="/users/signup" method="POST" novalidate)
-            .input-group 
+            .input-group
                 label(for="username") Username
-                input(type="text" name="username" required minlength="3" maxlength="50" value=(user && user.username) ? user.username : '')
-            .input-group 
+                input(type="text" name="username" id="username" required minlength="3" maxlength="50" value=(user && user.username) ? user.username : '')
+            .input-group
                 label(for="password") Password
-                input(type="password" name="password" required minlength="6" maxlength="255")
-            .input-group 
-                label(for="confirmPassword") Confirm Password 
-                input(type="password" name="confirmPassword" required minlength="6" maxlength="255")
+                input(type="password" name="password" id="password" required minlength="6" maxlength="255")
+            .input-group
+                label(for="confirmPassword") Confirm Password
+                input(type="password" name="confirmPassword" id="confirmPassword" required minlength="6" maxlength="255")
 
             button(type="submit") Sign Up
         p
             | Already have an account?
-            a(href="/users/login") Log in here
+            br
+            a(href="/users/login") Log In
 
     if errors
         ul
             each error in errors
-                li #{error.msg}
+                li= error.msg

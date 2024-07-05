@@ -6,62 +6,79 @@ var logger = require("morgan");
 const passport = require("passport");
 const session = require("express-session");
 const crypto = require("crypto");
+
 const secret = crypto.randomBytes(64).toString("hex");
 
+// Import routes
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 
 var app = express();
 
-const mongoose = require("mongoose");
-require("dotenv").config();
-require("./config/passport")(passport);
+const rateLimit = require("express-rate-limit");
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 50,
+  message: "Too many requests, please try again later.",
+});
 
-// view engine setup
+// Connect to MongoDB using Mongoose
+const mongoose = require("mongoose");
+require("dotenv").config(); // Load environment variables
+
+// View engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+// Middleware setup
+app.use(logger("dev")); // HTTP request logging
+app.use(express.json()); // Parse JSON bodies
+app.use(express.urlencoded({ extended: false })); // Parse URL-encoded bodies
+app.use(cookieParser()); // Parse cookies
+app.use(express.static(path.join(__dirname, "public"))); // Serve static files from 'public' directory
+app.use(limiter);
+
+// Session middleware setup
 app.use(
   session({
     secret: secret,
     resave: false,
     saveUninitialized: false,
+    // Add more options as needed (e.g., secure: true for HTTPS)
   })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.set("strictQuery", false);
-
+// MongoDB connection setup
+mongoose.set("strictQuery", false); // Disable strict mode for queries
 main().catch((err) => console.log(err));
+
 async function main() {
-  await mongoose.connect(process.env.MONGODB_URI);
+  await mongoose.connect(process.env.MONGODB_URI); // Connect to MongoDB using URI from environment variables
 }
 
 mongoose.connection.on("connected", () => {
   console.log("Connected to MongoDB");
 });
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
+// Mount routes
+app.use("/", indexRouter); // Mount indexRouter for '/'
+app.use("/users", usersRouter); // Mount usersRouter for '/users'
 
-// catch 404 and forward to error handler
+// Handle 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
 });
 
-// error handler
+// Error handler
 app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
+  // Set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
+  // Render the error page
   res.status(err.status || 500);
   res.render("error");
 });

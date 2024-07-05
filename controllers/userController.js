@@ -1,7 +1,8 @@
 const User = require("../models/user");
-const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
+const { generateHash } = require("../lib/passwordUtils");
+const passportConfig = require("../config/passport");
 
 exports.signup_get = (req, res, next) => {
   res.render("signup", { title: "Sign Up" });
@@ -29,10 +30,10 @@ exports.signup_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-
     const { username, password } = req.body;
 
     if (!errors.isEmpty()) {
+      console.error("Validation errors:", errors.array());
       return res.render("signup", {
         title: "Sign Up",
         user: { username },
@@ -41,9 +42,11 @@ exports.signup_post = [
     }
 
     try {
+      console.log("Checking if username exists:", username);
       const userExists = await User.findOne({ username });
 
       if (userExists) {
+        console.log("Username already exists:", username);
         return res.render("signup", {
           title: "Sign Up",
           user: { username },
@@ -51,18 +54,47 @@ exports.signup_post = [
         });
       }
 
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-
-      const newUser = new User({
-        username,
-        password: hashedPassword,
-      });
-
+      console.log("Creating new user:", username);
+      const hashedPassword = await generateHash(password);
+      const newUser = new User({ username, password: hashedPassword });
       await newUser.save();
-      res.redirect("/");
+
+      console.log("User registered successfully:", username);
+      res.redirect("/users/login");
     } catch (err) {
+      console.error("Error during signup:", err);
       return next(err);
     }
   }),
 ];
+
+exports.login_get = (req, res, next) => {
+  res.render("login", { title: "Log In" });
+};
+
+exports.login_post = (req, res, next) => {
+  passportConfig.authenticate("local", (err, user, info) => {
+    if (err) {
+      console.error("Error during authentication:", err);
+      return next(err);
+    }
+
+    if (!user) {
+      console.log("User authentication failed:", info.message);
+      return res.render("login", {
+        title: "Log In",
+        user: req.body,
+        errors: [{ msg: "Invalid username or password." }],
+      });
+    }
+
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error("Error during req.logIn:", err);
+        return next(err);
+      }
+      console.log("User logged in successfully:", user.username);
+      return res.redirect("/");
+    });
+  })(req, res, next);
+};

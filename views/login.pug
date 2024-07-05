@@ -1,0 +1,23 @@
+extends layout 
+
+block content
+    section
+        h1= title
+        form(action="/users/login" method="POST" novalidate)
+            .input-group
+                label(for="username") Username
+                input(type="text" name="username" id="username" required)
+            .input-group
+                label(for="password") Password
+                input(type="password" name="password" id="password" required)
+
+            button(type="submit") Log In
+        p
+            | Don't have an account?
+            br
+            a(href="/users/signup") Sign Up
+
+    if errors
+        ul
+            each error in errors
+                li= error.msg
