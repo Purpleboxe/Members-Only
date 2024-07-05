@@ -22,6 +22,24 @@ const UserSchema = new Schema({
   },
 });
 
+UserSchema.methods.generateHash = async function (password) {
+  try {
+    this.password = await bcrypt.hash(password, 10);
+    return true;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+UserSchema.methods.validatePassword = async function (password) {
+  try {
+    const match = await bcrypt.compare(password, this.password);
+    return !!match;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
 const User = mongoose.model("User", UserSchema);
 
 module.exports = User;

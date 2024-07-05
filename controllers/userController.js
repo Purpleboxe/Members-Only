@@ -1,7 +1,6 @@
 const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
-const { generateHash } = require("../lib/passwordUtils");
 const passportConfig = require("../config/passport");
 
 exports.signup_get = (req, res, next) => {
@@ -55,8 +54,10 @@ exports.signup_post = [
       }
 
       console.log("Creating new user:", username);
-      const hashedPassword = await generateHash(password);
-      const newUser = new User({ username, password: hashedPassword });
+      const newUser = new User({ username });
+      if (!(await newUser.generateHash(password))) {
+        throw new Error("Failed to set password.");
+      }
       await newUser.save();
 
       console.log("User registered successfully:", username);
@@ -75,10 +76,8 @@ exports.login_get = (req, res, next) => {
 exports.login_post = (req, res, next) => {
   passportConfig.authenticate("local", (err, user, info) => {
     if (err) {
-      console.error("Error during authentication:", err);
       return next(err);
     }
-
     if (!user) {
       console.log("User authentication failed:", info.message);
       return res.render("login", {
@@ -88,13 +87,12 @@ exports.login_post = (req, res, next) => {
       });
     }
 
-    req.logIn(user, (err) => {
+    req.login(user, (err) => {
       if (err) {
-        console.error("Error during req.logIn:", err);
         return next(err);
       }
-      console.log("User logged in successfully:", user.username);
-      return res.redirect("/");
+
+      return res.status(200).redirect("/");
     });
   })(req, res, next);
 };

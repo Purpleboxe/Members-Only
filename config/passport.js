@@ -1,7 +1,6 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const User = require("../models/user");
-const { validatePassword } = require("../lib/passwordUtils");
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -9,8 +8,8 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await User.findById(id);
-    done(null, user);
+    const user = await User.findById(id).exec();
+    return done(null, user.toObject());
   } catch (err) {
     done(err);
   }
@@ -19,18 +18,18 @@ passport.deserializeUser(async (id, done) => {
 passport.use(
   new LocalStrategy(async (username, password, done) => {
     try {
-      const user = await User.findOne({ username: username });
+      const user = await User.findOne({ username }).exec();
       if (!user) {
         return done(null, false, { message: "Incorrect username" });
       }
 
-      const isValid = validatePassword(password, user.password);
+      const isValid = await user.validatePassword(password);
 
-      if (isValid) {
-        return done(null, user);
-      } else {
-        return done(null, false);
+      if (!isValid) {
+        return done(null, false, { message: "Incorrect password" });
       }
+
+      return done(null, user);
     } catch (err) {
       return done(err);
     }
