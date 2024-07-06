@@ -22,6 +22,11 @@ const UserSchema = new Schema({
   },
 });
 
+UserSchema.pre("save", function (next) {
+  this.username = this.username.toLowerCase();
+  next();
+});
+
 UserSchema.methods.generateHash = async function (password) {
   try {
     this.password = await bcrypt.hash(password, 10);

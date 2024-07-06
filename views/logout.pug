@@ -1,0 +1,13 @@
+extends layout 
+
+block content 
+    section
+        h1= title 
+        form(action="/users/logout" method="POST" novalidate)
+            .input-group 
+                p Are you sure you want to log out?
+                button(type="submit") Log Out
+        p
+            | Back to homepage
+            br
+            a(href="/").link Home

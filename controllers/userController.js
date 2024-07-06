@@ -96,3 +96,16 @@ exports.login_post = (req, res, next) => {
     });
   })(req, res, next);
 };
+
+exports.logout_get = (req, res, next) => {
+  res.render("logout", { title: "Log Out" });
+};
+
+exports.logout_post = (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
+};

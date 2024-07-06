@@ -7,6 +7,13 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     header 
-      h2 Members Only
+      h2
+        a(href="/") Members Only  
+      .actions 
+        if !user 
+          a.button(href="/users/signup") Sign Up 
+          a.button(href="/users/login") Log In
+        else
+          a.button(href="/users/logout") Log Out
     main
       block content

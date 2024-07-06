@@ -18,7 +18,8 @@ passport.deserializeUser(async (id, done) => {
 passport.use(
   new LocalStrategy(async (username, password, done) => {
     try {
-      const user = await User.findOne({ username }).exec();
+      const normalizedUsername = username.toLowerCase();
+      const user = await User.findOne({ username: normalizedUsername }).exec();
       if (!user) {
         return done(null, false, { message: "Incorrect username" });
       }

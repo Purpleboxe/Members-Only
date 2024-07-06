@@ -51,6 +51,12 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Middleware to set user in locals
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
+
 // MongoDB connection setup
 mongoose.set("strictQuery", false); // Disable strict mode for queries
 main().catch((err) => console.log(err));
