@@ -11,9 +11,9 @@ html
         a(href="/") Members Only  
       .actions 
         if !user 
-          a.button(href="/users/signup") Sign Up 
-          a.button(href="/users/login") Log In
+          a.action(href="/users/signup") Sign Up 
+          a.action(href="/users/login") Log In
         else
-          a.button(href="/users/logout") Log Out
+          a.action(href="/users/logout") Log Out
     main
       block content
