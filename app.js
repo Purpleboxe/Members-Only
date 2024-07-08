@@ -10,8 +10,9 @@ const crypto = require("crypto");
 const secret = crypto.randomBytes(64).toString("hex");
 
 // Import routes
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/users");
+const messagesRouter = require("./routes/messages");
 
 var app = express();
 
@@ -72,6 +73,7 @@ mongoose.connection.on("connected", () => {
 // Mount routes
 app.use("/", indexRouter); // Mount indexRouter for '/'
 app.use("/users", usersRouter); // Mount usersRouter for '/users'
+app.use("/messages", messagesRouter);
 
 // Handle 404 and forward to error handler
 app.use(function (req, res, next) {

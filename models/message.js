@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-import { DateTime } from "luxon";
+const { DateTime } = require("luxon");
 
 const MessageSchema = new Schema({
   title: {
