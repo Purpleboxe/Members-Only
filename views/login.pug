@@ -10,14 +10,15 @@ block content
             .input-group
                 label(for="password") Password
                 input(type="password" name="password" id="password" required)
+            
+            if errors
+                ul
+                    each error in errors
+                        li.error= error.msg
+
 
             button.submit(type="submit") Log In
             
             .notice
                 | Don't have an account?
                 a(href="/users/signup").link Sign Up
-
-    if errors
-        ul
-            each error in errors
-                li= error.msg

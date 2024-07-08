@@ -6,7 +6,7 @@ block content
         form(action="/users/signup" method="POST" novalidate)
             .input-group
                 label(for="username") Username
-                input(type="text" name="username" id="username" required minlength="3" maxlength="50" value=(user && user.username) ? user.username : '')
+                input(type="text" name="username" id="username" required minlength="3" maxlength="50" value=(username && username.username) ? username.username : '')
             .input-group
                 label(for="password") Password
                 input(type="password" name="password" id="password" required minlength="6" maxlength="255")
@@ -14,13 +14,13 @@ block content
                 label(for="confirmPassword") Confirm Password
                 input(type="password" name="confirmPassword" id="confirmPassword" required minlength="6" maxlength="255")
 
+            if errors
+                ul
+                    each error in errors
+                        li.error= error.msg
+
             button.submit(type="submit") Sign Up
             
             .notice
                 | Already have an account?
                 a(href="/users/login").link Log In
-
-    if errors
-        ul
-            each error in errors
-                li= error.msg

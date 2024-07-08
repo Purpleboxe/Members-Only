@@ -22,7 +22,7 @@ exports.signup_post = [
     .trim()
     .custom((value, { req }) => {
       if (value !== req.body.password) {
-        throw new Error("Passwords do not match");
+        throw new Error("Passwords do not match.");
       }
       return true;
     }),
@@ -35,7 +35,7 @@ exports.signup_post = [
       console.error("Validation errors:", errors.array());
       return res.render("signup", {
         title: "Sign Up",
-        user: { username },
+        username: { username },
         errors: errors.array(),
       });
     }
@@ -48,7 +48,7 @@ exports.signup_post = [
         console.log("Username already exists:", username);
         return res.render("signup", {
           title: "Sign Up",
-          user: { username },
+          username: { username },
           errors: [{ msg: "Username already exists." }],
         });
       }
@@ -82,7 +82,6 @@ exports.login_post = (req, res, next) => {
       console.log("User authentication failed:", info.message);
       return res.render("login", {
         title: "Log In",
-        user: req.body,
         errors: [{ msg: "Invalid username or password." }],
       });
     }
