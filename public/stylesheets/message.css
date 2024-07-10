@@ -1,0 +1,51 @@
+textarea {
+  height: 20vh;
+  resize: none;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  padding: 10px;
+  font-family: "OpenSans", Arial, Helvetica, sans-serif;
+}
+
+.submit {
+  background-color: var(--hover);
+}
+
+.submit:hover {
+  background-color: #008cde;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.message {
+  border-radius: 10px;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 1px 1px 5px var(--shadow2);
+  width: 50vw;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.message-header {
+  display: flex;
+  flex-direction: column;
+}
+
+hr {
+  border: 1px solid var(--shadow2);
+  width: 100%;
+}
+
+h3 {
+  margin: 10px 0;
+}
+
+.user {
+  color: var(--hover);
+}
