@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
+const Message = require("./message");
 
 const UserSchema = new Schema({
   username: {
@@ -22,9 +23,22 @@ const UserSchema = new Schema({
   },
 });
 
+UserSchema.virtual("url").get(function () {
+  return `/users/${this._id}/profile`;
+});
+
 UserSchema.pre("save", function (next) {
   this.username = this.username.toLowerCase();
   next();
+});
+
+UserSchema.pre("remove", async function (next) {
+  try {
+    await Message.deleteMany({ user: this._id });
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 
 UserSchema.methods.generateHash = async function (password) {

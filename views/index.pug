@@ -13,14 +13,16 @@ block content
         for message in messages
           .message
             .message-header
-              if user
-                if message.user.username == user.username
-                  h3.user= message.user.username
-                else 
-                  h3= message.user.username
-              h3= message.title
-            .message-body 
-              p!= message.text
+              if message.user
+                if user
+                  if message.user.username == user.username
+                    a(href=message.user.url) 
+                      h3.user= message.user.username
+                  else 
+                    a(href=message.user.url) 
+                      h3= message.user.username
+                h3= message.title
+              .message-body 
+                p!= message.text
     else 
       p There are currently no messages.
-          

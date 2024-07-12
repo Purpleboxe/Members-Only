@@ -5,7 +5,8 @@ const Message = require("../models/message");
 
 /* GET home page. */
 router.get("/", async function (req, res, next) {
-  const messages = await Message.find().populate("user").exec();
+  let messages = await Message.find().populate("user").exec();
+  messages = messages.filter((message) => message.user);
   res.render("index", {
     title: "Members Only",
     user: req.user,

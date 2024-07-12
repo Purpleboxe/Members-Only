@@ -14,6 +14,8 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const messagesRouter = require("./routes/messages");
 
+const { checkUserExists } = require("./config/auth");
+
 var app = express();
 
 const rateLimit = require("express-rate-limit");
@@ -55,6 +57,9 @@ app.use(passport.session());
 // Middleware to set user in locals
 app.use((req, res, next) => {
   res.locals.user = req.user;
+  if (req.user) {
+    res.locals.user.url = `/users/${req.user._id}/profile`;
+  }
   next();
 });
 
@@ -73,7 +78,7 @@ mongoose.connection.on("connected", () => {
 // Mount routes
 app.use("/", indexRouter); // Mount indexRouter for '/'
 app.use("/users", usersRouter); // Mount usersRouter for '/users'
-app.use("/messages", messagesRouter);
+app.use("/messages", checkUserExists, messagesRouter);
 
 // Handle 404 and forward to error handler
 app.use(function (req, res, next) {

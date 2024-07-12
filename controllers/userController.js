@@ -108,3 +108,17 @@ exports.logout_post = (req, res, next) => {
     res.redirect("/");
   });
 };
+
+exports.user_detail = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (user === null) {
+    const err = new Error("User not found!");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("profile", {
+    title: user.username + "'s Profile",
+  });
+});
