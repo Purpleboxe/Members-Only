@@ -1,0 +1,21 @@
+section {
+  align-items: start;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.profile {
+  text-align: left;
+}
+
+.profile .action {
+  font-size: 1.5rem;
+}
+
+.secondary {
+  font-size: 1.5rem;
+}
+
+hr {
+  width: 100%;
+}

@@ -1,5 +1,14 @@
 extends layout 
 
-block content 
-    section 
-        h1= title
+block content
+  link(rel='stylesheet', href='/stylesheets/profile.css')
+  section
+    .profile 
+        h1.primary= title
+            .secondary #{currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1)}
+        h2 Date Joined: #{currentUser.formattedTimestamp}
+        h2 Messages: #{messageCount}
+        if currentUser.username == user.username
+          hr
+          a.action(href=`/users/${currentUser._id}/profile/settings`) User Settings
+

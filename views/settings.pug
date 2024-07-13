@@ -1,0 +1,23 @@
+extends layout 
+
+block content
+    section
+        if currentUser.username !== user.username 
+            h1.primary You are not authorized to view this page.
+        else
+            h1.primary Settings
+            if user.role === 'non-member'
+                form(action=`/users/${currentUser._id}/profile/settings`, method="POST")
+                    .input-group
+                        label(for="memberPassword") Enter Membership Password:
+                        input(type="text" name="memberPassword" id="memberPassword")
+                    if errors
+                    ul
+                        each error in errors
+                            li.error= error.msg
+                    button.submit(type="submit") Save Changes
+            else if user.role === 'member'
+                h2 You are currently a Member 
+            else if user.role === 'admin'
+                h2 You are currently an Admin
+                    

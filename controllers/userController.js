@@ -2,6 +2,7 @@ const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const passportConfig = require("../config/passport");
+const Message = require("../models/message");
 
 exports.signup_get = (req, res, next) => {
   res.render("signup", { title: "Sign Up" });
@@ -29,7 +30,9 @@ exports.signup_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const { username, password } = req.body;
+    let { username, password } = req.body;
+
+    username = username.toLowerCase();
 
     if (!errors.isEmpty()) {
       console.error("Validation errors:", errors.array());
@@ -118,7 +121,52 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
     return next(err);
   }
 
+  const messages = await Message.find({ user: user._id });
+  const messageCount = messages.length;
+
   res.render("profile", {
     title: user.username + "'s Profile",
+    currentUser: user,
+    messageCount: messageCount,
   });
+});
+
+exports.settings_get = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (user === null) {
+    const err = new Error("User not found!");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("settings", {
+    title: "Settings",
+    currentUser: user,
+    errors: [],
+  });
+});
+
+exports.settings_post = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  const memberPassword = process.env.MEMBER_PASSWORD;
+
+  if (!user) {
+    const err = new Error("User not found!");
+    err.status = 404;
+    return next(err);
+  }
+
+  if (req.body.memberPassword === memberPassword) {
+    user.role = "member";
+    await user.save();
+    res.redirect(user.url);
+  } else {
+    res.render("settings", {
+      title: "Settings",
+      user: req.user,
+      currentUser: user,
+      errors: [{ msg: "Incorrect password for membership upgrade." }],
+    });
+  }
 });

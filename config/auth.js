@@ -41,4 +41,12 @@ module.exports = {
       next();
     }
   },
+
+  checkOwnership: function (req, res, next) {
+    if (req.user && req.user._id.equals(req.params.id)) {
+      next();
+    } else {
+      res.status(403).send("Forbidden");
+    }
+  },
 };

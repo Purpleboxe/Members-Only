@@ -3,6 +3,8 @@ const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 const Message = require("./message");
 
+const { DateTime } = require("luxon");
+
 const UserSchema = new Schema({
   username: {
     type: String,
@@ -21,10 +23,18 @@ const UserSchema = new Schema({
     enum: ["non-member", "member", "admin"],
     default: "non-member",
   },
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 UserSchema.virtual("url").get(function () {
   return `/users/${this._id}/profile`;
+});
+
+UserSchema.virtual("formattedTimestamp").get(function () {
+  return DateTime.fromJSDate(this.timestamp).toLocaleString(DateTime.DATE_MED);
 });
 
 UserSchema.pre("save", function (next) {
