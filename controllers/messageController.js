@@ -37,3 +37,23 @@ exports.message_create_post = [
     res.redirect("/");
   }),
 ];
+
+exports.message_delete_get = asyncHandler(async (req, res, next) => {
+  const message = await Message.findById(req.params.id).exec();
+
+  if (!message) {
+    return res.status(404).send("Message not found!");
+  }
+
+  if (
+    req.user._id.toString() !== message.user._id.toString() &&
+    req.user.role !== "admin"
+  ) {
+    return res
+      .status(403)
+      .send("You do not have permission to delete this message");
+  }
+
+  await Message.findByIdAndDelete(req.params.id);
+  res.redirect("/");
+});

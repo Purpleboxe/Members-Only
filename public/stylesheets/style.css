@@ -5,6 +5,8 @@
   --font: #212529;
   --lighter-font: #383e44;
   --hover: #009bf5;
+  --gray: rgb(140, 140, 140);
+  --red: rgb(215, 45, 45);
 }
 
 @font-face {
@@ -121,7 +123,7 @@ form {
 
 .error {
   list-style-type: circle;
-  color: rgb(215, 45, 45);
+  color: var(--red);
 }
 
 .btn {
@@ -137,4 +139,13 @@ form {
 .btn:hover {
   background-color: #008cde;
   color: white;
+}
+
+.delete a {
+  color: var(--red);
+  font-weight: bold;
+}
+
+.delete {
+  text-align: right;
 }

@@ -34,7 +34,9 @@ textarea {
 
 .message-header {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
 }
 
 hr {
@@ -46,6 +48,18 @@ h3 {
   margin: 10px 0;
 }
 
+h4 {
+  margin: 0;
+}
+
 .user {
   color: var(--hover);
+}
+
+.gray {
+  color: var(--gray);
+}
+
+.admin {
+  color: var(--red);
 }

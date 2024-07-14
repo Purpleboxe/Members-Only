@@ -16,6 +16,8 @@ block content
                         each error in errors
                             li.error= error.msg
                     button.submit(type="submit") Save Changes
+                p You can find the password to become a member here!
+                a.link(href="https://github.com/Purpleboxe/Members-Only") https://github.com/Purpleboxe/Members-Only
             else if user.role === 'member'
                 h2 You are currently a Member 
             else if user.role === 'admin'

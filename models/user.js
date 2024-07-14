@@ -27,6 +27,10 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  ogName: {
+    type: String,
+    trim: true,
+  },
 });
 
 UserSchema.virtual("url").get(function () {

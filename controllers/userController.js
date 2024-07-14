@@ -32,38 +32,39 @@ exports.signup_post = [
     const errors = validationResult(req);
     let { username, password } = req.body;
 
+    let ogName = username;
     username = username.toLowerCase();
 
     if (!errors.isEmpty()) {
       console.error("Validation errors:", errors.array());
       return res.render("signup", {
         title: "Sign Up",
-        username: { username },
+        username: { ogName },
         errors: errors.array(),
       });
     }
 
     try {
-      console.log("Checking if username exists:", username);
+      console.log("Checking if username exists:", ogName);
       const userExists = await User.findOne({ username });
 
       if (userExists) {
         console.log("Username already exists:", username);
         return res.render("signup", {
           title: "Sign Up",
-          username: { username },
+          username: { ogName },
           errors: [{ msg: "Username already exists." }],
         });
       }
 
-      console.log("Creating new user:", username);
-      const newUser = new User({ username });
+      console.log("Creating new user:", ogName);
+      const newUser = new User({ username, ogName });
       if (!(await newUser.generateHash(password))) {
         throw new Error("Failed to set password.");
       }
       await newUser.save();
 
-      console.log("User registered successfully:", username);
+      console.log("User registered successfully:", ogName);
       res.redirect("/users/login");
     } catch (err) {
       console.error("Error during signup:", err);
@@ -125,7 +126,7 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
   const messageCount = messages.length;
 
   res.render("profile", {
-    title: user.username + "'s Profile",
+    title: user.ogName + "'s Profile",
     currentUser: user,
     messageCount: messageCount,
   });
