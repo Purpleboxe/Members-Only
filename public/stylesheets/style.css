@@ -2,11 +2,19 @@
   --background: #f8f9fa;
   --shadow: rgba(210, 210, 210, 0.6);
   --shadow2: rgba(210, 210, 210);
+  --white: white;
   --font: #212529;
   --lighter-font: #383e44;
   --hover: #009bf5;
   --gray: rgb(140, 140, 140);
-  --red: rgb(215, 45, 45);
+  --red: rgb(247, 75, 75);
+
+  --background-dark: #293037;
+  --font-dark: #f8f9fa;
+  --lighter-font-dark: #f0eded;
+  --shadow-dark: rgb(33, 36, 39);
+  --shadow2-dark: rgb(36, 40, 44);
+  --black: #373e45;
 }
 
 @font-face {
@@ -35,7 +43,7 @@ header {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--shadow);
-  background-color: white;
+  background-color: var(--white);
   padding: 6px 8rem;
 }
 
@@ -48,7 +56,7 @@ form {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  background-color: white;
+  background-color: var(--white);
   border-radius: 10px;
   box-shadow: 1px 1px 5px var(--shadow);
   padding: 30px;
@@ -63,7 +71,7 @@ form {
 .actions {
   display: flex;
   align-items: center;
-  gap: 60px;
+  gap: 40px;
 }
 
 .action {
@@ -89,20 +97,17 @@ form {
   border-radius: 5px;
   border: 1px solid #ccc;
   color: var(--font);
+  background-color: var(--white);
   width: 20vw;
-}
-
-.input-group input:focus {
-  border: 1px solid var(--hover);
 }
 
 .submit {
   background-color: #35987c;
   border: none;
-  color: white;
+  color: var(--font-dark);
   padding: 10px 60px;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: 4px;
+  font-size: 1.2rem;
   font-weight: bold;
   width: 100%;
   cursor: pointer;
@@ -123,6 +128,7 @@ form {
 
 .error {
   list-style-type: circle;
+  font-weight: bold;
   color: var(--red);
 }
 
@@ -146,6 +152,33 @@ form {
   font-weight: bold;
 }
 
+.delete a:hover {
+  color: rgb(255, 0, 0);
+}
+
 .delete {
   text-align: right;
+}
+
+#theme-toggle {
+  display: flex;
+  justify-content: center;
+  border: none;
+  border-radius: 10px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+#theme-toggle.dark-mode {
+  filter: brightness(0) invert(1);
+}
+
+#theme-toggle img {
+  width: 30px;
+  opacity: 0.5;
+  transition: 0.1s ease-in-out;
+}
+
+#theme-toggle img:hover {
+  opacity: 1;
 }

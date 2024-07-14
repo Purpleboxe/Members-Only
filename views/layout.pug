@@ -6,17 +6,20 @@ html
     meta(name='viewport', content='width=device-width, initial-scale=1')
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel="icon" href="/images/message.svg" type="image/svg+xml")
+    script(src="/javascripts/theme.js")
   body
-    header 
+    header
       h2
         a(href="/") Members Only  
-      .actions 
-        if !user 
+      .actions
+        button#theme-toggle
+            img(src="/images/theme-light-dark.svg", alt="Theme")
+        if !user
           a.action(href="/users/signup") Sign Up 
           a.action(href="/users/login") Log In
         else
           a.btn(href="/messages/create") New Message
-          a.action(href="/users/logout") Log Out
           a.action(href=user.url) Profile
+          a.action(href="/users/logout") Log Out        
     main
       block content

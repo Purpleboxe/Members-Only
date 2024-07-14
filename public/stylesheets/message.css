@@ -5,6 +5,8 @@ textarea {
   border-radius: 5px;
   font-size: 1rem;
   padding: 10px;
+  background-color: var(--white);
+  color: var(--font);
   font-family: "OpenSans", Arial, Helvetica, sans-serif;
 }
 
@@ -25,7 +27,7 @@ textarea {
 .message {
   border-radius: 10px;
   padding: 20px;
-  background-color: white;
+  background-color: var(--white);
   box-shadow: 1px 1px 5px var(--shadow2);
   width: 50vw;
   overflow-wrap: break-word;
