@@ -91,3 +91,18 @@ hr {
   background-color: var(--red);
   color: white;
 }
+
+.danger-zone-profile {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.danger-zone-profile .btn {
+  color: var(--red);
+  border: 1px solid var(--red);
+}
+
+.danger-zone-profile .btn:hover {
+  background-color: var(--red);
+  color: white;
+}

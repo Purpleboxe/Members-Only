@@ -27,10 +27,10 @@ block content
                 h1.primary Danger Zone
                 .danger-zone-form
                     form(action=`/users/${currentUser._id}/messages/delete`, method="POST", onsubmit="return confirmDeleteMessages()")
-                        button.btn(type="submit") Delete All My Messages
+                        button.btn(type="submit") Delete All Messages
 
                     form(action=`/users/${currentUser._id}/delete`, method="POST", onsubmit="return confirmDeleteUser()")
-                        button.btn(type="submit") Delete My Account
+                        button.btn(type="submit") Delete Account
 
     script.
         function confirmDeleteMessages() {

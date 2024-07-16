@@ -11,6 +11,10 @@ block content
         if currentUser.username == user.username
           hr
           a.action(href=`/users/${currentUser._id}/profile/settings`) User Settings
+        else if user.role == 'admin'
+          hr
+          form.danger-zone-profile(action=`/users/${currentUser._id}/delete`, method="POST", onsubmit="return confirmDeleteUser()")
+            button.btn(type="submit") Delete Account
     if messageCount > 0
       .mini-messages
         h1.primary Messages sent by user
@@ -21,3 +25,8 @@ block content
                 .mini-message-title #{message.title}
                 .mini-message-date #{message.formattedTimestamp}
               .mini-message-text!= message.text
+
+  script.
+      function confirmDeleteUser() {
+          return confirm("Are you sure you want to delete this account? This action cannot be undone and all your messages will be deleted.");
+      }

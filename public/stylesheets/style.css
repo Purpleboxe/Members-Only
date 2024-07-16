@@ -74,6 +74,35 @@ form {
   gap: 40px;
 }
 
+.search {
+  display: flex;
+  flex-direction: row;
+  background-color: transparent;
+  box-shadow: none;
+  gap: 10px;
+  padding: 0px;
+}
+
+.search input {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  color: var(--font);
+  background-color: var(--white);
+}
+
+.search .submit {
+  font-size: 1rem;
+  background-color: var(--hover);
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.search .submit:hover {
+  background-color: #008cde;
+}
+
 .action {
   font-weight: bold;
   border-radius: 10px;
@@ -207,4 +236,10 @@ form {
   font-weight: bold;
   background-color: var(--font);
   color: var(--white);
+}
+
+.users {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
 }

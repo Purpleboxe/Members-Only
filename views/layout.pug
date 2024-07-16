@@ -18,6 +18,10 @@ html
           a.action(href="/users/signup") Sign Up 
           a.action(href="/users/login") Log In
         else
+          if user.role !== "non-member"
+            form.search(action="/users/search", method="GET")
+              input(type="text" name="username" placeholder="Search users...")
+              button.submit(type="submit") Search
           a.btn(href="/messages/create") New Message
           a.action(href=user.url) Profile
           a.action(href="/users/logout") Log Out        

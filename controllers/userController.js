@@ -197,3 +197,20 @@ exports.deleteUser = async (req, res) => {
     res.status(500).send("Error deleting user");
   }
 };
+
+exports.search_users = asyncHandler(async (req, res, next) => {
+  const searchQuery = req.query.username;
+  let users;
+
+  if (searchQuery) {
+    const regex = new RegExp(searchQuery, "i");
+    users = await User.find({ username: regex });
+  } else {
+    users = await User.find({});
+  }
+
+  res.render("user_list", {
+    title: "User List",
+    users: users,
+  });
+});
