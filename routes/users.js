@@ -27,4 +27,8 @@ router.post(
   user_controller.settings_post
 );
 
+router.post("/:id/messages/delete", user_controller.deleteAllMessages);
+
+router.post("/:id/delete", user_controller.deleteUser);
+
 module.exports = router;

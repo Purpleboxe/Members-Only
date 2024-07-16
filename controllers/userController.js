@@ -122,13 +122,16 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
     return next(err);
   }
 
-  const messages = await Message.find({ user: user._id });
+  const messages = await Message.find({ user: user._id }).sort({
+    timestamp: -1,
+  });
   const messageCount = messages.length;
 
   res.render("profile", {
     title: user.ogName + "'s Profile",
     currentUser: user,
     messageCount: messageCount,
+    messages: messages,
   });
 });
 
@@ -171,3 +174,26 @@ exports.settings_post = asyncHandler(async (req, res, next) => {
     });
   }
 });
+
+exports.deleteAllMessages = async (req, res) => {
+  const userID = req.params.id;
+  try {
+    await Message.deleteMany({ user: userID });
+    res.redirect(`/users/${userID}/profile/settings`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error deleting messages");
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  const userID = req.params.id;
+  try {
+    await Message.deleteMany({ user: userID });
+    await User.findByIdAndDelete(userID);
+    res.redirect("/");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error deleting user");
+  }
+};

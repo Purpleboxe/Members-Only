@@ -1,7 +1,8 @@
 extends layout 
 
 block content
-    section
+    link(rel='stylesheet', href='/stylesheets/profile.css')
+    section.settings
         if currentUser.username !== user.username 
             h1.primary You are not authorized to view this page.
         else
@@ -12,9 +13,9 @@ block content
                         label(for="memberPassword") Enter Membership Password:
                         input(type="text" name="memberPassword" id="memberPassword")
                     if errors
-                    ul
-                        each error in errors
-                            li.error= error.msg
+                        ul
+                            each error in errors
+                                li.error= error.msg
                     button.submit(type="submit") Save Changes
                 p You can find the password to become a member here!
                 a.link(href="https://github.com/Purpleboxe/Members-Only") https://github.com/Purpleboxe/Members-Only
@@ -22,4 +23,20 @@ block content
                 h2 You are currently a Member 
             else if user.role === 'admin'
                 h2 You are currently an Admin
-                    
+            .danger-zone
+                h1.primary Danger Zone
+                .danger-zone-form
+                    form(action=`/users/${currentUser._id}/messages/delete`, method="POST", onsubmit="return confirmDeleteMessages()")
+                        button.btn(type="submit") Delete All My Messages
+
+                    form(action=`/users/${currentUser._id}/delete`, method="POST", onsubmit="return confirmDeleteUser()")
+                        button.btn(type="submit") Delete My Account
+
+    script.
+        function confirmDeleteMessages() {
+            return confirm("Are you sure you want to delete all your messages? This action cannot be undone.");
+        }
+
+        function confirmDeleteUser() {
+            return confirm("Are you sure you want to delete this account? This action cannot be undone and all your messages will be deleted.");
+        }

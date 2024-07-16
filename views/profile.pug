@@ -11,4 +11,13 @@ block content
         if currentUser.username == user.username
           hr
           a.action(href=`/users/${currentUser._id}/profile/settings`) User Settings
-
+    if messageCount > 0
+      .mini-messages
+        h1.primary Messages sent by user
+        .mini-messages-all
+          for message in messages 
+            .mini-message
+              .mini-message-header 
+                .mini-message-title #{message.title}
+                .mini-message-date #{message.formattedTimestamp}
+              .mini-message-text!= message.text

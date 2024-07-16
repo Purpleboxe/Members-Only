@@ -4,6 +4,11 @@ section {
   justify-content: space-evenly;
 }
 
+.settings {
+  align-items: center;
+  flex-direction: column;
+}
+
 .profile {
   text-align: left;
 }
@@ -18,4 +23,71 @@ section {
 
 hr {
   width: 100%;
+}
+
+.mini-messages {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.mini-messages-all {
+  display: flex;
+  flex-direction: column;
+  max-height: 50vh;
+  max-width: 30vw;
+  overflow-y: auto;
+  gap: 20px;
+  padding: 20px;
+}
+
+.mini-message {
+  border-radius: 10px;
+  padding: 20px;
+  background-color: var(--white);
+  box-shadow: 1px 1px 5px var(--shadow2);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.mini-message-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.mini-message-title {
+  font-weight: bold;
+  width: 15vw;
+}
+
+.danger-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--white);
+  border-radius: 10px;
+  box-shadow: 1px 1px 5px var(--shadow);
+  margin: 60px 0;
+}
+
+.danger-zone-form {
+  display: flex;
+  flex-direction: row;
+}
+
+.danger-zone form {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.danger-zone .btn {
+  color: var(--red);
+  border: 1px solid var(--red);
+}
+
+.danger-zone .btn:hover {
+  background-color: var(--red);
+  color: white;
 }

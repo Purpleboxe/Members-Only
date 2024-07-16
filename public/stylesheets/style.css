@@ -139,6 +139,7 @@ form {
   font-weight: bold;
   padding: 10px;
   border-radius: 10px;
+  cursor: pointer;
   transition: 0.1s ease-in-out;
 }
 
@@ -200,11 +201,6 @@ form {
   font-size: 1.2rem;
   text-decoration: none;
   color: var(--font);
-}
-
-.page-number:hover {
-  background-color: var(--font);
-  color: var(--white);
 }
 
 .page-number.active {
