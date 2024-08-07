@@ -25,10 +25,6 @@ const limiter = rateLimit({
   message: "Too many requests, please try again later.",
 });
 
-// Connect to MongoDB using Mongoose
-const mongoose = require("mongoose");
-require("dotenv").config(); // Load environment variables
-
 // View engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
@@ -63,17 +59,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// MongoDB connection setup
-mongoose.set("strictQuery", false); // Disable strict mode for queries
 main().catch((err) => console.log(err));
-
-async function main() {
-  await mongoose.connect(process.env.MONGODB_URI); // Connect to MongoDB using URI from environment variables
-}
-
-mongoose.connection.on("connected", () => {
-  console.log("Connected to MongoDB");
-});
 
 // Mount routes
 app.use("/", indexRouter); // Mount indexRouter for '/'
