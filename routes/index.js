@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const Message = require("../models/message");
+const { pool } = require("../db/db");
 
 /* GET home page. */
 router.get("/", async function (req, res, next) {
@@ -9,16 +9,19 @@ router.get("/", async function (req, res, next) {
   const skip = (page - 1) * limit;
 
   try {
-    let messages = await Message.find()
-      .populate("user")
-      .skip(skip)
-      .limit(limit)
-      .sort({ timestamp: -1 })
-      .exec();
+    const messageQuery = `
+      SELECT m.id, m.title, m.text, m.timestamp, u.username, u.og_name
+      FROM messages m
+      JOIN users u ON m.user_id = u.id
+      ORDER BY m.timestamp DESC
+      LIMIT $1 OFFSET $2
+    `;
+    const { rows: messages } = await pool.query(messageQuery, [limit, skip]);
 
-    messages = messages.filter((message) => message.user);
-
-    const totalMessages = await Message.countDocuments();
+    const totalMessagesResult = await pool.query(
+      "SELECT COUNT(*) FROM messages"
+    );
+    const totalMessages = parseInt(totalMessages.rows[0].count, 10);
     const totalPages = Math.ceil(totalMessages / limit);
 
     res.render("index", {
