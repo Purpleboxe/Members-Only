@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const { pool } = require("../db/db");
 
 module.exports = {
   auth: function (req, res, next) {
@@ -18,8 +18,11 @@ module.exports = {
   checkUserExists: async function (req, res, next) {
     if (req.isAuthenticated()) {
       try {
-        const user = await User.findById(req.user._id);
-        if (!user) {
+        const { rows: user } = await pool.query(
+          "SELECT * FROM users WHERE id = $1",
+          [req.user.id]
+        );
+        if (!user[0]) {
           req.logout((err) => {
             if (err) {
               return next(err);
@@ -43,7 +46,7 @@ module.exports = {
   },
 
   checkOwnership: function (req, res, next) {
-    if (req.user && req.user._id.equals(req.params.id)) {
+    if (req.isAuthenticated() && req.user.id === parseInt(req.params.id, 10)) {
       next();
     } else {
       res.status(403).send("Forbidden");

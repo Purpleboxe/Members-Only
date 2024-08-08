@@ -33,10 +33,6 @@ const deleteUserById = async (id) => {
   }
 };
 
-const validatePassword = async (password, storedPassword) => {
-  return await bcrypt.compare(password, storedPassword);
-};
-
 const formatTimestamp = (timestamp) => {
   return DateTime.fromJSDate(new Date(timestamp)).toLocaleString(
     DateTime.DATE_MED
@@ -47,6 +43,5 @@ module.exports = {
   pool,
   createUser,
   deleteUserById,
-  validatePassword,
   formatTimestamp,
 };
