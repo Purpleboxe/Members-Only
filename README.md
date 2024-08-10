@@ -16,7 +16,7 @@ Members Only for [The Odin Project](https://www.theodinproject.com/lessons/nodej
 
 - Pug
 - Node (Express)
-- MongoDB
+- SQL
 - PassportJS
 - JavaScript
 - CSS
@@ -56,7 +56,7 @@ To run the application locally:
    Create a `.env` file in the root of the directory and add the following:
 
    ```env
-   MONGODB_URI=your_mongodb_url
+   DATABASE_URL=your_postgresql_database
    MEMBER_PASSWORD=your_member_password
    ```
 
