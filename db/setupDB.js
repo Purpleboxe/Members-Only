@@ -12,7 +12,9 @@ const createUserTableQuery = `
         password VARCHAR(255) NOT NULL,
         role VARCHAR(10) DEFAULT 'non-member' CHECK (role IN ('non-member', 'member', 'admin')),
         timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        og_name VARCHAR(255)
+        "formatted_timestamp" VARCHAR(255),
+        "og_name" VARCHAR(255),
+        user_url VARCHAR(255)
     );
 `;
 
@@ -23,6 +25,7 @@ const createMessageTableQuery = `
         text VARCHAR(255) NOT NULL CHECK (char_length(text) >= 3),
         timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         user_id INTEGER NOT NULL,
+        "formatted_timestamp" VARCHAR(255),
         FOREIGN KEY (user_id) REFERENCES users(id)
     );
 `;

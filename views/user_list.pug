@@ -8,17 +8,17 @@ block content
             if users.length
                 each user_ in users
                     if user_.username == user.username 
-                        a(href=user_.url)
-                            h3.user= user_.ogName
+                        a(href=user_.user_url)
+                            h3.user= user_.og_name
                     else if user_.role == 'non-member'
-                        a(href=user_.url)
-                            h3.gray= user_.ogName
+                        a(href=user_.user_url)
+                            h3.gray= user_.og_name
                     else if user_.role == 'member'
-                        a(href=user_.url)
-                            h3= user_.ogName
+                        a(href=user_.user_url)
+                            h3= user_.og_name
                     else if user_.role == 'admin'
-                        a(href=user_.url)
-                            h3.admin= user_.ogName
+                        a(href=user_.user_url)
+                            h3.admin= user_.og_name
             else
                 p No users found.
         else 

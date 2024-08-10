@@ -59,8 +59,6 @@ app.use((req, res, next) => {
   next();
 });
 
-main().catch((err) => console.log(err));
-
 // Mount routes
 app.use("/", indexRouter); // Mount indexRouter for '/'
 app.use("/users", usersRouter); // Mount usersRouter for '/users'

@@ -8,7 +8,7 @@ block content
         else
             h1.primary Settings
             if user.role === 'non-member'
-                form(action=`/users/${currentUser._id}/profile/settings`, method="POST")
+                form(action=`${user.user_url}/settings`, method="POST")
                     .input-group
                         label(for="memberPassword") Enter Membership Password:
                         input(type="text" name="memberPassword" id="memberPassword")
@@ -26,10 +26,10 @@ block content
             .danger-zone
                 h1.primary Danger Zone
                 .danger-zone-form
-                    form(action=`/users/${currentUser._id}/messages/delete`, method="POST", onsubmit="return confirmDeleteMessages()")
+                    form(action=`/users/${currentUser.id}/messages/delete`, method="POST", onsubmit="return confirmDeleteMessages()")
                         button.btn(type="submit") Delete All Messages
 
-                    form(action=`/users/${currentUser._id}/delete`, method="POST", onsubmit="return confirmDeleteUser()")
+                    form(action=`/users/${currentUser.id}/delete`, method="POST", onsubmit="return confirmDeleteUser()")
                         button.btn(type="submit") Delete Account
 
     script.

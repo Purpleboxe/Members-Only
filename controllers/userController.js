@@ -1,8 +1,7 @@
-const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const passportConfig = require("../config/passport");
-const Message = require("../models/message");
+const { pool, createUser, deleteUserById } = require("../db/db");
 
 exports.signup_get = (req, res, next) => {
   res.render("signup", { title: "Sign Up" });
@@ -46,9 +45,12 @@ exports.signup_post = [
 
     try {
       console.log("Checking if username exists:", ogName);
-      const userExists = await User.findOne({ username });
+      const { rows: userExists } = await pool.query(
+        "SELECT * FROM users WHERE username = $1",
+        [username]
+      );
 
-      if (userExists) {
+      if (userExists[0]) {
         console.log("Username already exists:", username);
         return res.render("signup", {
           title: "Sign Up",
@@ -58,11 +60,7 @@ exports.signup_post = [
       }
 
       console.log("Creating new user:", ogName);
-      const newUser = new User({ username, ogName });
-      if (!(await newUser.generateHash(password))) {
-        throw new Error("Failed to set password.");
-      }
-      await newUser.save();
+      createUser(username, password, "non-member", ogName);
 
       console.log("User registered successfully:", ogName);
       res.redirect("/users/login");
@@ -114,31 +112,36 @@ exports.logout_post = (req, res, next) => {
 };
 
 exports.user_detail = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
+  const { rows: user } = await pool.query("SELECT * FROM users WHERE id = $1", [
+    req.params.id,
+  ]);
 
-  if (user === null) {
+  if (!user[0]) {
     const err = new Error("User not found!");
     err.status = 404;
     return next(err);
   }
 
-  const messages = await Message.find({ user: user._id }).sort({
-    timestamp: -1,
-  });
+  const { rows: messages } = await pool.query(
+    "SELECT * FROM messages WHERE user_id = $1 ORDER BY timestamp DESC",
+    [user[0].id]
+  );
   const messageCount = messages.length;
 
   res.render("profile", {
-    title: user.ogName + "'s Profile",
-    currentUser: user,
+    title: user[0].og_name + "'s Profile",
+    currentUser: user[0],
     messageCount: messageCount,
     messages: messages,
   });
 });
 
 exports.settings_get = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
+  const { rows: user } = await pool.query(`SELECT * FROM users WHERE id = $1`, [
+    req.params.id,
+  ]);
 
-  if (user === null) {
+  if (!user[0]) {
     const err = new Error("User not found!");
     err.status = 404;
     return next(err);
@@ -146,30 +149,33 @@ exports.settings_get = asyncHandler(async (req, res, next) => {
 
   res.render("settings", {
     title: "Settings",
-    currentUser: user,
+    currentUser: user[0],
     errors: [],
   });
 });
 
 exports.settings_post = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user._id);
+  const { rows: user } = await pool.query(`SELECT * FROM users WHERE id = $1`, [
+    req.user.id,
+  ]);
   const memberPassword = process.env.MEMBER_PASSWORD;
 
-  if (!user) {
+  if (!user[0]) {
     const err = new Error("User not found!");
     err.status = 404;
     return next(err);
   }
 
   if (req.body.memberPassword === memberPassword) {
-    user.role = "member";
-    await user.save();
-    res.redirect(user.url);
+    await pool.query("UPDATE users SET role = 'member' WHERE id = $1", [
+      user[0].id,
+    ]);
+    res.redirect(`/users/${user[0].id}/profile`);
   } else {
     res.render("settings", {
       title: "Settings",
       user: req.user,
-      currentUser: user,
+      currentUser: user[0],
       errors: [{ msg: "Incorrect password for membership upgrade." }],
     });
   }
@@ -178,7 +184,7 @@ exports.settings_post = asyncHandler(async (req, res, next) => {
 exports.deleteAllMessages = async (req, res) => {
   const userID = req.params.id;
   try {
-    await Message.deleteMany({ user: userID });
+    await pool.query("DELETE FROM messages WHERE user_id = $1", [userID]);
     res.redirect(`/users/${userID}/profile/settings`);
   } catch (err) {
     console.error(err);
@@ -189,8 +195,7 @@ exports.deleteAllMessages = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   const userID = req.params.id;
   try {
-    await Message.deleteMany({ user: userID });
-    await User.findByIdAndDelete(userID);
+    deleteUserById(userID);
     res.redirect("/");
   } catch (err) {
     console.error(err);
@@ -203,10 +208,15 @@ exports.search_users = asyncHandler(async (req, res, next) => {
   let users;
 
   if (searchQuery) {
-    const regex = new RegExp(searchQuery, "i");
-    users = await User.find({ username: regex });
+    const regex = `%${searchQuery}%`;
+    const { rows } = await pool.query(
+      `SELECT * FROM users WHERE username ILIKE $1`,
+      [regex]
+    );
+    users = rows;
   } else {
-    users = await User.find({});
+    const { rows } = await pool.query(`SELECT * FROM users`);
+    users = rows;
   }
 
   res.render("user_list", {

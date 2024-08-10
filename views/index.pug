@@ -6,36 +6,35 @@ block content
     if !user
       h1.primary Sign up now to start messaging!
     else 
-      h1.primary Welcome back, #{user.ogName}
+      h1.primary Welcome back, #{user.og_name}
     h1 All Messages
     if messages.length
       .messages
         for message in messages
           .message
             .message-header
-              if message.user
-                if user
-                  if message.user.username == user.username
-                    a(href=message.user.url) 
-                      h3.user= message.user.ogName
-                    h4.gray= message.formattedTimestamp
-                  else if user.role == "member" || user.role == "admin"
-                    if message.user.role == "non-member"
-                      a(href=message.user.url) 
-                        h3.gray= message.user.ogName
-                    else if message.user.role == "member"
-                      a(href=message.user.url) 
-                        h3= message.user.ogName
-                    else if message.user.role == "admin"
-                      a(href=message.user.url) 
-                        h3.admin= message.user.ogName
-                    h4.gray= message.formattedTimestamp
+              if user
+                if message.id == user.id
+                  a(href=message.user_url) 
+                    h3.user= message.og_name
+                  h4.gray= message.formatted_timestamp
+                else if user.role == "member" || user.role == "admin"
+                  if message.role == "non-member"
+                    a(href=message.user_url) 
+                      h3.gray= message.og_name
+                  else if message.role == "member"
+                    a(href=message.user_url) 
+                      h3= message.og_name
+                  else if message.role == "admin"
+                    a(href=message.user_url) 
+                      h3.admin= message.og_name
+                  h4.gray= message.formatted_timestamp
             .message-body
                 h3= message.title
                 p!= message.text
-            if user && (message.user.username == user.username || user.role == "admin")
+            if user && (message.id == user.id || user.role == "admin")
               .delete
-                a(href=`/messages/${message._id}/delete`) Delete
+                a(href=`/messages/${message.id}/delete`) Delete
             else if !user || user.role == "non-member"
               hr
               p.gray Become a member to view the author and date of messages

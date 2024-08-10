@@ -6,14 +6,14 @@ block content
     .profile 
         h1.primary= title
             .secondary #{currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1)}
-        h2 Date Joined: #{currentUser.formattedTimestamp}
+        h2 Date Joined: #{currentUser.formatted_timestamp}
         h2 Messages: #{messageCount}
         if currentUser.username == user.username
           hr
-          a.action(href=`/users/${currentUser._id}/profile/settings`) User Settings
+          a.action(href=`${user.user_url}/settings`) User Settings
         else if user.role == 'admin'
           hr
-          form.danger-zone-profile(action=`/users/${currentUser._id}/delete`, method="POST", onsubmit="return confirmDeleteUser()")
+          form.danger-zone-profile(action=`/users/${currentUser.id}/delete`, method="POST", onsubmit="return confirmDeleteUser()")
             button.btn(type="submit") Delete Account
     if messageCount > 0
       .mini-messages
@@ -23,8 +23,11 @@ block content
             .mini-message
               .mini-message-header 
                 .mini-message-title #{message.title}
-                .mini-message-date #{message.formattedTimestamp}
+                .mini-message-date #{message.formatted_timestamp}
               .mini-message-text!= message.text
+              if user && (message.user_id == user.id || user.role == "admin")
+                .delete
+                  a(href=`/messages/${message.id}/delete`) Delete
 
   script.
       function confirmDeleteUser() {
