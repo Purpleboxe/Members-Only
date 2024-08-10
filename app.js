@@ -53,9 +53,6 @@ app.use(passport.session());
 // Middleware to set user in locals
 app.use((req, res, next) => {
   res.locals.user = req.user;
-  if (req.user) {
-    res.locals.user.url = `/users/${req.user._id}/profile`;
-  }
   next();
 });
 

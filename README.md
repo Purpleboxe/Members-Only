@@ -60,13 +60,19 @@ To run the application locally:
    MEMBER_PASSWORD=your_member_password
    ```
 
-5. Start the application:
+5. Set up the database by adding tables using the following:
+
+   ```bash
+   node db/setupDB.js
+   ```
+
+6. Start the application:
 
    ```bash
    npm start
    ```
 
-6. Open up your web browser and go to `http://localhost:3000/`.
+7. Open up your web browser and go to `http://localhost:3000/`.
 
 ## Conclusion
 
